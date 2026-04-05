@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.anomalyco/mcp-mysql",
+  "description": "MCP server exposing MySQL database functionalities as tools",
+  "repository": {
+    "url": "https://github.com/anomalyco/mcp-mysql",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "mcp-mysql",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
