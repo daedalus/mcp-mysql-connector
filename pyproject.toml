@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mcp-mysql-connector"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server exposing MySQL database functionalities as tools"
 readme = "README.md"
 requires-python = ">=3.11"
