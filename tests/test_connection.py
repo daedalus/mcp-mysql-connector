@@ -1,6 +1,5 @@
-from unittest.mock import MagicMock, patch
-
 import pytest
+from unittest.mock import MagicMock, patch
 
 from mcp_mysql.services.connection import ConnectionManager
 
@@ -8,6 +7,16 @@ from mcp_mysql.services.connection import ConnectionManager
 class TestConnectionManager:
     def setup_method(self):
         ConnectionManager._instance = None
+
+    @patch("mcp_mysql.services.connection.MySQLConnection")
+    def test_singleton_pattern(self, mock_conn_class):
+        mock_conn = MagicMock()
+        mock_conn.is_connected = True
+        mock_conn_class.return_value = mock_conn
+
+        cm1 = ConnectionManager()
+        cm2 = ConnectionManager()
+        assert cm1 is cm2
 
     @patch("mcp_mysql.services.connection.MySQLConnection")
     def test_connect(self, mock_conn_class):
@@ -33,6 +42,17 @@ class TestConnectionManager:
         assert cm._pool is not None
 
     @patch("mcp_mysql.services.connection.MySQLConnection")
+    def test_connect_closes_existing(self, mock_conn_class):
+        mock_conn = MagicMock()
+        mock_conn.is_connected = True
+        mock_conn_class.return_value = mock_conn
+
+        cm = ConnectionManager()
+        cm._connection = mock_conn
+        cm.connect(host="localhost", user="root")
+        mock_conn.close.assert_called_once()
+
+    @patch("mcp_mysql.services.connection.MySQLConnection")
     def test_disconnect(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn_class.return_value = mock_conn
@@ -45,9 +65,31 @@ class TestConnectionManager:
         mock_conn.close.assert_called_once()
         assert cm._connection is None
 
+    @patch("mcp_mysql.services.connection.MySQLConnection")
+    def test_disconnect_with_pool(self, mock_conn_class):
+        mock_conn = MagicMock()
+        mock_pool = MagicMock()
+        mock_conn_class.return_value = mock_conn
+
+        cm = ConnectionManager()
+        cm._connection = mock_conn
+        cm._pool = mock_pool
+        cm.disconnect()
+
+        mock_pool.close_all.assert_called_once()
+        assert cm._pool is None
+
     def test_get_connection_not_connected(self):
         cm = ConnectionManager()
         cm._connection = None
+        with pytest.raises(RuntimeError, match="Not connected"):
+            cm.get_connection()
+
+    def test_get_connection_disconnected(self):
+        mock_conn = MagicMock()
+        mock_conn.is_connected = False
+        cm = ConnectionManager()
+        cm._connection = mock_conn
         with pytest.raises(RuntimeError, match="Not connected"):
             cm.get_connection()
 
