@@ -2,6 +2,9 @@
 
 MCP server exposing MySQL database functionalities as tools for LLM agents.
 
+mcp-name: io.github.daedalus/mcp-mysql-connector
+
+
 [![PyPI](https://img.shields.io/pypi/v/mcp-mysql-connector.svg)](https://pypi.org/project/mcp-mysql-connector/)
 [![Python](https://img.shields.io/pypi/pyversions/mcp-mysql-connector.svg)](https://pypi.org/project/mcp-mysql-connector/)
 [![Coverage](https://codecov.io/gh/daedalus/mcp-mysql-connector/branch/master/graph/badge.svg)](https://codecov.io/gh/daedalus/mcp-mysql-connector)
@@ -229,6 +232,4 @@ mcp-mysql-connector/
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## mcp-name
 
-`io.github.daedalus/mcp-mysql-connector`
