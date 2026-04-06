@@ -32,6 +32,8 @@ class ConnectionManager:
     """
 
     _instance: ConnectionManager | None = None
+    _connection: MySQLConnection | None
+    _pool: ConnectionPool | None
 
     def __new__(cls) -> ConnectionManager:
         """Create or return the singleton ConnectionManager instance.
@@ -98,7 +100,12 @@ class ConnectionManager:
                 pool_size=pool_size,
             )
 
-        return {"status": "connected", "host": host, "port": port, "database": database}
+        return {
+            "status": "connected",
+            "host": host,
+            "port": str(port),
+            "database": database,
+        }
 
     def disconnect(self) -> dict[str, str]:
         """Disconnect from MySQL database.
@@ -150,7 +157,9 @@ class ConnectionManager:
             raise RuntimeError("Not connected to MySQL. Call connect() first.")
         return self._connection
 
-    def execute(self, sql: str, params: tuple | dict | None = None) -> dict[str, Any]:
+    def execute(
+        self, sql: str, params: tuple[Any, ...] | dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Execute a SQL query.
 
         Args:

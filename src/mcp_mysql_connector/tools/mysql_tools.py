@@ -62,7 +62,9 @@ def disconnect() -> dict[str, Any]:
     return cm.disconnect()
 
 
-def execute_query(sql: str, params: dict | tuple | None = None) -> dict[str, Any]:
+def execute_query(
+    sql: str, params: dict[str, Any] | tuple[Any, ...] | None = None
+) -> dict[str, Any]:
     """Execute a raw SQL query and return results.
 
     Args:

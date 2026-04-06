@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/mcp-mysql
+      url: https://pypi.org/p/mcp-mysql-connector
     permissions:
       id-token: write
     steps:

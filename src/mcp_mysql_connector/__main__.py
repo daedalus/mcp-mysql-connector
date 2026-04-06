@@ -1,8 +1,8 @@
-from mcp_mysql_connector import mcp
+from mcp_mysql_connector import run
 
 
 def main() -> int:
-    mcp.run()
+    run()
     return 0
 
 

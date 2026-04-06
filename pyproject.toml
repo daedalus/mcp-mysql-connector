@@ -29,6 +29,7 @@ test = [
     "pytest-cov",
     "pytest-mock",
     "pytest-asyncio",
+    "types-PyMySQL",
 ]
 lint = [
     "ruff",

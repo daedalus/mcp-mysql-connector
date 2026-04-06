@@ -9,10 +9,15 @@ from __future__ import annotations
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
-import pymysql
-from pymysql.cursors import DictCursor
+import pymysql  # type: ignore[import-untyped]
+from pymysql.cursors import DictCursor  # type: ignore[import-untyped]
 
-from mcp_mysql_connector.core.models import ColumnInfo, QueryResult, ServerStatus, TableSchema
+from mcp_mysql_connector.core.models import (
+    ColumnInfo,
+    QueryResult,
+    ServerStatus,
+    TableSchema,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -125,13 +130,16 @@ class MySQLConnection:
         """
         if not self._connection:
             self.connect()
+        assert self._connection is not None
         cursor = self._connection.cursor()
         try:
             yield cursor
         finally:
             cursor.close()
 
-    def execute(self, sql: str, params: tuple | dict | None = None) -> QueryResult:
+    def execute(
+        self, sql: str, params: tuple[Any, ...] | dict[str, Any] | None = None
+    ) -> QueryResult:
         """Execute a SQL query.
 
         Executes the given SQL statement with optional parameters and
@@ -161,7 +169,9 @@ class MySQLConnection:
                 )
             return QueryResult(columns=[], rows=[], affected_rows=cur.rowcount)
 
-    def execute_many(self, sql: str, params_list: list[tuple | dict]) -> int:
+    def execute_many(
+        self, sql: str, params_list: list[tuple[Any, ...] | dict[str, Any]]
+    ) -> int:
         """Execute a SQL statement multiple times with different parameters.
 
         Uses executemany to efficiently execute the same SQL statement
@@ -180,7 +190,7 @@ class MySQLConnection:
         """
         with self.cursor() as cur:
             cur.executemany(sql, params_list)
-            return cur.rowcount
+            return cur.rowcount if cur.rowcount is not None else 0
 
     def commit(self) -> None:
         """Commit the current transaction.

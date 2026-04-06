@@ -68,7 +68,7 @@ class TableSchema:
     name: str
     columns: list[ColumnInfo]
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, list[dict[str, Any]] | str]:
         """Convert TableSchema to a dictionary.
 
         Returns:
@@ -114,7 +114,7 @@ class ServerStatus:
     flush_tables: int
     open_tables: int
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, int | str]:
         """Convert ServerStatus to a dictionary.
 
         Returns:

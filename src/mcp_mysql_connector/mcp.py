@@ -51,7 +51,7 @@ mcp.tool()(mysql_tools.rollback)
 mcp.tool()(mysql_tools.is_connected)
 
 
-@mcp.resource("database://{name}")
+@mcp.resource("database://{name}")  # type: ignore[untyped-decorator]
 def database_resource(name: str) -> dict[str, Any]:
     """Database metadata resource.
 
@@ -78,7 +78,7 @@ def database_resource(name: str) -> dict[str, Any]:
     }
 
 
-@mcp.resource("table://{db}/{table}")
+@mcp.resource("table://{db}/{table}")  # type: ignore[untyped-decorator]
 def table_resource(db: str, table: str) -> dict[str, Any]:
     """Table metadata resource.
 

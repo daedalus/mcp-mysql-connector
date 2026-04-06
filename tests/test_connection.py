@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from mcp_mysql_connector.services.connection import ConnectionManager
 

@@ -1,5 +1,9 @@
-
-from mcp_mysql_connector.core.models import ColumnInfo, QueryResult, ServerStatus, TableSchema
+from mcp_mysql_connector.core.models import (
+    ColumnInfo,
+    QueryResult,
+    ServerStatus,
+    TableSchema,
+)
 
 
 class TestQueryResult:
