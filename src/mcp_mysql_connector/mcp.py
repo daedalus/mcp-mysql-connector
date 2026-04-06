@@ -20,7 +20,7 @@ from typing import Any
 
 import fastmcp
 
-from mcp_mysql.tools import mysql_tools
+from mcp_mysql_connector.tools import mysql_tools
 
 mcp = fastmcp.FastMCP("mcp-mysql")
 

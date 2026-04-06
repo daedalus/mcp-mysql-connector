@@ -1,10 +1,10 @@
 from unittest.mock import MagicMock, patch
 
-from mcp_mysql.tools import mysql_tools
+from mcp_mysql_connector.tools import mysql_tools
 
 
 class TestConnect:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_connect_success(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.connect.return_value = {
@@ -25,7 +25,7 @@ class TestConnect:
         assert result["status"] == "connected"
         mock_cm.connect.assert_called_once()
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_connect_with_pool(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.connect.return_value = {"status": "connected"}
@@ -40,7 +40,7 @@ class TestConnect:
 
 
 class TestDisconnect:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_disconnect(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.disconnect.return_value = {"status": "disconnected"}
@@ -53,7 +53,7 @@ class TestDisconnect:
 
 
 class TestExecuteQuery:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_execute_query(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {
@@ -69,7 +69,7 @@ class TestExecuteQuery:
         assert result["rows"] == [[1, "Alice"]]
         mock_cm.execute.assert_called_once_with("SELECT * FROM users", None)
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_execute_query_with_params(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {
@@ -87,7 +87,7 @@ class TestExecuteQuery:
 
 
 class TestListDatabases:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_list_databases(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.list_databases.return_value = ["mysql", "testdb", "information_schema"]
@@ -100,7 +100,7 @@ class TestListDatabases:
 
 
 class TestListTables:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_list_tables(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.list_tables.return_value = ["users", "orders", "products"]
@@ -111,7 +111,7 @@ class TestListTables:
         assert result == ["users", "orders", "products"]
         mock_cm.list_tables.assert_called_once_with("testdb")
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_list_tables_no_database(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.list_tables.return_value = ["users", "orders"]
@@ -124,7 +124,7 @@ class TestListTables:
 
 
 class TestDescribeTable:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_describe_table(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.describe_table.return_value = {
@@ -150,7 +150,7 @@ class TestDescribeTable:
 
 
 class TestCreateDatabase:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_create_database(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.create_database.return_value = {
@@ -167,7 +167,7 @@ class TestCreateDatabase:
 
 
 class TestDropDatabase:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_drop_database(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.drop_database.return_value = {"status": "dropped", "database": "olddb"}
@@ -180,7 +180,7 @@ class TestDropDatabase:
 
 
 class TestCreateTable:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_create_table(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {"affected_rows": 0}
@@ -196,7 +196,7 @@ class TestCreateTable:
 
 
 class TestDropTable:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_drop_table_with_exists(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {"affected_rows": 0}
@@ -207,7 +207,7 @@ class TestDropTable:
         assert result["status"] == "dropped"
         mock_cm.execute.assert_called_once()
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_drop_table_without_exists(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {"affected_rows": 0}
@@ -219,7 +219,7 @@ class TestDropTable:
 
 
 class TestShowColumns:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_show_columns(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.show_columns.return_value = [{"field": "id", "type": "int"}]
@@ -232,7 +232,7 @@ class TestShowColumns:
 
 
 class TestShowIndexes:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_show_indexes(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.show_indexes.return_value = [{"key_name": "PRIMARY"}]
@@ -245,7 +245,7 @@ class TestShowIndexes:
 
 
 class TestCreateIndex:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_create_index(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {"affected_rows": 0}
@@ -260,7 +260,7 @@ class TestCreateIndex:
 
 
 class TestDropIndex:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_drop_index(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.execute.return_value = {"affected_rows": 0}
@@ -272,7 +272,7 @@ class TestDropIndex:
 
 
 class TestCreateUser:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_create_user(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.create_user.return_value = {
@@ -290,7 +290,7 @@ class TestCreateUser:
 
 
 class TestDropUser:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_drop_user(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.drop_user.return_value = {
@@ -305,7 +305,7 @@ class TestDropUser:
 
 
 class TestGrantPrivileges:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_grant_privileges(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.grant_privileges.return_value = {
@@ -325,7 +325,7 @@ class TestGrantPrivileges:
 
 
 class TestRevokePrivileges:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_revoke_privileges(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.revoke_privileges.return_value = {
@@ -347,7 +347,7 @@ class TestRevokePrivileges:
 
 
 class TestShowPrivileges:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_show_privileges(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.show_grants.return_value = ["GRANT SELECT ON *.* TO 'user'@'localhost'"]
@@ -360,7 +360,7 @@ class TestShowPrivileges:
 
 
 class TestServerStatus:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_server_status(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.server_status.return_value = {
@@ -383,7 +383,7 @@ class TestServerStatus:
 
 
 class TestTableExists:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_table_exists_true(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.table_exists.return_value = True
@@ -394,7 +394,7 @@ class TestTableExists:
         assert result is True
         mock_cm.table_exists.assert_called_once_with("users", "testdb")
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_table_exists_false(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.table_exists.return_value = False
@@ -406,7 +406,7 @@ class TestTableExists:
 
 
 class TestDatabaseExists:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_database_exists_true(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.database_exists.return_value = True
@@ -419,7 +419,7 @@ class TestDatabaseExists:
 
 
 class TestTransaction:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_commit(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_get_cm.return_value = mock_cm
@@ -429,7 +429,7 @@ class TestTransaction:
         assert result["status"] == "committed"
         mock_cm.commit.assert_called_once()
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_rollback(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_get_cm.return_value = mock_cm
@@ -441,7 +441,7 @@ class TestTransaction:
 
 
 class TestIsConnected:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_is_connected_true(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.is_connected = True
@@ -451,7 +451,7 @@ class TestIsConnected:
 
         assert result is True
 
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    @patch("mcp_mysql_connector.tools.mysql_tools.get_connection_manager")
     def test_is_connected_false(self, mock_get_cm):
         mock_cm = MagicMock()
         mock_cm.is_connected = False

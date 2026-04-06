@@ -1,15 +1,15 @@
-# mcp-mysql
+# mcp-mysql-connector
 
 MCP server exposing MySQL database functionalities as tools for LLM agents.
 
-[![PyPI](https://img.shields.io/pypi/v/mcp-mysql.svg)](https://pypi.org/project/mcp-mysql/)
-[![Python](https://img.shields.io/pypi/pyversions/mcp-mysql.svg)](https://pypi.org/project/mcp-mysql/)
-[![Coverage](https://codecov.io/gh/anomalyco/mcp-mysql/branch/master/graph/badge.svg)](https://codecov.io/gh/anomalyco/mcp-mysql)
+[![PyPI](https://img.shields.io/pypi/v/mcp-mysql-connector.svg)](https://pypi.org/project/mcp-mysql-connector/)
+[![Python](https://img.shields.io/pypi/pyversions/mcp-mysql-connector.svg)](https://pypi.org/project/mcp-mysql-connector/)
+[![Coverage](https://codecov.io/gh/daedalus/mcp-mysql-connector/branch/master/graph/badge.svg)](https://codecov.io/gh/daedalus/mcp-mysql-connector)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ## Overview
 
-mcp-mysql is a Model Context Protocol (MCP) server that provides MySQL database operations as tools for LLM agents. It allows AI assistants to interact with MySQL databases through a standardized protocol, enabling:
+mcp-mysql-connector is a Model Context Protocol (MCP) server that provides MySQL database operations as tools for LLM agents. It allows AI assistants to interact with MySQL databases through a standardized protocol, enabling:
 
 - Database and table management
 - Query execution
@@ -20,7 +20,7 @@ mcp-mysql is a Model Context Protocol (MCP) server that provides MySQL database 
 ## Install
 
 ```bash
-pip install mcp-mysql
+pip install mcp-mysql-connector
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ pip install mcp-mysql
 
 ```bash
 # Run with stdio transport (default)
-mcp-mysql
+mcp-mysql-connector
 
 # Or run programmatically
 python -c "from mcp_mysql import mcp; mcp.run()"
@@ -182,8 +182,8 @@ export MYSQL_DATABASE=mydb
 
 ```bash
 # Clone repository
-git clone https://github.com/anomalyco/mcp-mysql.git
-cd mcp-mysql
+git clone https://github.com/daedalus/mcp-mysql-connector.git
+cd mcp-mysql-connector
 
 # Create virtual environment
 python -m venv venv
@@ -208,7 +208,7 @@ mypy src/
 ## Architecture
 
 ```
-mcp-mysql/
+mcp-mysql-connector/
 ├── src/mcp_mysql/
 │   ├── core/models.py       # Data models (QueryResult, TableSchema, etc.)
 │   ├── adapters/mysql.py    # MySQL connection & pooling
@@ -231,4 +231,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## mcp-name
 
-`io.github.anomalyco/mcp-mysql`
+`io.github.daedalus/mcp-mysql-connector`

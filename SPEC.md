@@ -1,4 +1,4 @@
-# SPEC.md — mcp-mysql
+# SPEC.md — mcp-mysql-connector
 
 ## Purpose
 An MCP (Model Context Protocol) server that exposes MySQL database functionalities as tools for LLM agents. It allows executing queries, managing databases, tables, and performing administrative operations via the MCP protocol.

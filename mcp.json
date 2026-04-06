@@ -1,7 +1,7 @@
 {
   "mcpServers": {
-    "mcp-mysql": {
-      "command": "mcp-mysql",
+    "mcp-mysql-connector": {
+      "command": "mcp-mysql-connector",
       "env": {}
     }
   }

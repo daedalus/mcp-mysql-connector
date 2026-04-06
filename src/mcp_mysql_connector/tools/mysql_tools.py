@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_mysql.services.connection import ConnectionManager
+from mcp_mysql_connector.services.connection import ConnectionManager
 
 
 def get_connection_manager() -> ConnectionManager:

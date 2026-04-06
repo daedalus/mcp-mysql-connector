@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_mysql.adapters.mysql import ConnectionPool, MySQLConnection
+from mcp_mysql_connector.adapters.mysql import ConnectionPool, MySQLConnection
 
 
 class ConnectionManager:

@@ -1,14 +1,14 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from mcp_mysql.services.connection import ConnectionManager
+from mcp_mysql_connector.services.connection import ConnectionManager
 
 
 class TestConnectionManager:
     def setup_method(self):
         ConnectionManager._instance = None
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_singleton_pattern(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -18,7 +18,7 @@ class TestConnectionManager:
         cm2 = ConnectionManager()
         assert cm1 is cm2
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_connect(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -30,7 +30,7 @@ class TestConnectionManager:
         assert result["status"] == "connected"
         mock_conn.connect.assert_called_once()
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_connect_with_pool(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -41,7 +41,7 @@ class TestConnectionManager:
 
         assert cm._pool is not None
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_connect_closes_existing(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -52,7 +52,7 @@ class TestConnectionManager:
         cm.connect(host="localhost", user="root")
         mock_conn.close.assert_called_once()
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_disconnect(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn_class.return_value = mock_conn
@@ -65,7 +65,7 @@ class TestConnectionManager:
         mock_conn.close.assert_called_once()
         assert cm._connection is None
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_disconnect_with_pool(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_pool = MagicMock()
@@ -93,7 +93,7 @@ class TestConnectionManager:
         with pytest.raises(RuntimeError, match="Not connected"):
             cm.get_connection()
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_get_connection(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -104,7 +104,7 @@ class TestConnectionManager:
         conn = cm.get_connection()
         assert conn == mock_conn
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_execute(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -118,7 +118,7 @@ class TestConnectionManager:
         result = cm.execute("SELECT * FROM users")
         assert "columns" in result
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_commit(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -129,7 +129,7 @@ class TestConnectionManager:
         cm.commit()
         mock_conn.commit.assert_called_once()
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_rollback(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -140,7 +140,7 @@ class TestConnectionManager:
         cm.rollback()
         mock_conn.rollback.assert_called_once()
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_list_databases(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -152,7 +152,7 @@ class TestConnectionManager:
         result = cm.list_databases()
         assert result == ["mysql", "testdb"]
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_list_tables(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -164,7 +164,7 @@ class TestConnectionManager:
         result = cm.list_tables("testdb")
         assert result == ["users", "orders"]
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_describe_table(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -178,7 +178,7 @@ class TestConnectionManager:
         result = cm.describe_table("users", "testdb")
         assert result["name"] == "users"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_show_columns(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -190,7 +190,7 @@ class TestConnectionManager:
         result = cm.show_columns("users", "testdb")
         assert len(result) == 1
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_show_indexes(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -202,7 +202,7 @@ class TestConnectionManager:
         result = cm.show_indexes("users", "testdb")
         assert len(result) == 1
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_create_database(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -213,7 +213,7 @@ class TestConnectionManager:
         result = cm.create_database("newdb")
         assert result["status"] == "created"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_drop_database(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -224,7 +224,7 @@ class TestConnectionManager:
         result = cm.drop_database("olddb")
         assert result["status"] == "dropped"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_database_exists_true(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -235,7 +235,7 @@ class TestConnectionManager:
         cm._connection = mock_conn
         assert cm.database_exists("testdb") is True
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_database_exists_false(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -246,7 +246,7 @@ class TestConnectionManager:
         cm._connection = mock_conn
         assert cm.database_exists("nonexistent") is False
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_table_exists_true(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -257,7 +257,7 @@ class TestConnectionManager:
         cm._connection = mock_conn
         assert cm.table_exists("users", "testdb") is True
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_table_exists_false(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -268,7 +268,7 @@ class TestConnectionManager:
         cm._connection = mock_conn
         assert cm.table_exists("nonexistent", "testdb") is False
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_create_user(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -279,7 +279,7 @@ class TestConnectionManager:
         result = cm.create_user("newuser", "localhost", "password")
         assert result["status"] == "created"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_drop_user(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -290,7 +290,7 @@ class TestConnectionManager:
         result = cm.drop_user("olduser", "localhost")
         assert result["status"] == "dropped"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_grant_privileges(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -301,7 +301,7 @@ class TestConnectionManager:
         result = cm.grant_privileges("SELECT", "testdb.*", "user", "localhost")
         assert result["status"] == "granted"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_revoke_privileges(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -312,7 +312,7 @@ class TestConnectionManager:
         result = cm.revoke_privileges("SELECT", "testdb.*", "user", "localhost")
         assert result["status"] == "revoked"
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_show_grants(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -326,7 +326,7 @@ class TestConnectionManager:
         result = cm.show_grants("user", "localhost")
         assert len(result) == 1
 
-    @patch("mcp_mysql.services.connection.MySQLConnection")
+    @patch("mcp_mysql_connector.services.connection.MySQLConnection")
     def test_server_status(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True

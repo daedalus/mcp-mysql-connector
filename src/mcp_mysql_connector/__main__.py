@@ -1,4 +1,4 @@
-from mcp_mysql import mcp
+from mcp_mysql_connector import mcp
 
 
 def main() -> int:

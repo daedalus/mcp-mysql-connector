@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mcp-mysql"
+name = "mcp-mysql-connector"
 version = "0.1.0"
 description = "MCP server exposing MySQL database functionalities as tools"
 readme = "README.md"
@@ -36,10 +36,10 @@ lint = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mcp_mysql"]
+packages = ["src/mcp_mysql_connector"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/mcp_mysql"]
+include = ["src/mcp_mysql_connector"]
 
 [tool.ruff]
 line-length = 88

@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 import pymysql
 from pymysql.cursors import DictCursor
 
-from mcp_mysql.core.models import ColumnInfo, QueryResult, ServerStatus, TableSchema
+from mcp_mysql_connector.core.models import ColumnInfo, QueryResult, ServerStatus, TableSchema
 
 if TYPE_CHECKING:
     from collections.abc import Generator

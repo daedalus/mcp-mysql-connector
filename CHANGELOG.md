@@ -18,4 +18,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Server status and health checks
 - MCP Resources for database and table metadata
 
-[0.1.0]: https://github.com/anomalyco/mcp-mysql/releases/tag/v0.1.0
+[0.1.0]: https://github.com/daedalus/mcp-mysql-connector/releases/tag/v0.1.0

@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from mcp_mysql.adapters.mysql import ConnectionPool, MySQLConnection
+from mcp_mysql_connector.adapters.mysql import ConnectionPool, MySQLConnection
 
 
 class TestMySQLConnection:
@@ -24,7 +24,7 @@ class TestMySQLConnection:
         assert conn.config["password"] == "secret"
         assert conn.config["database"] == "testdb"
 
-    @patch("mcp_mysql.adapters.mysql.pymysql.connect")
+    @patch("mcp_mysql_connector.adapters.mysql.pymysql.connect")
     def test_connect(self, mock_connect):
         mock_conn = MagicMock()
         mock_connect.return_value = mock_conn
@@ -45,7 +45,7 @@ class TestMySQLConnection:
         conn = MySQLConnection()
         assert conn.is_connected is False
 
-    @patch("mcp_mysql.adapters.mysql.pymysql.connect")
+    @patch("mcp_mysql_connector.adapters.mysql.pymysql.connect")
     def test_is_connected_true_when_open(self, mock_connect):
         mock_conn = MagicMock()
         mock_conn.open = True
@@ -54,7 +54,7 @@ class TestMySQLConnection:
         conn.connect()
         assert conn.is_connected is True
 
-    @patch("mcp_mysql.adapters.mysql.pymysql.connect")
+    @patch("mcp_mysql_connector.adapters.mysql.pymysql.connect")
     def test_is_connected_false_when_closed(self, mock_connect):
         mock_conn = MagicMock()
         mock_conn.open = False
@@ -86,7 +86,7 @@ class TestConnectionPool:
         assert pool.config["password"] == "secret"
         assert pool.config["database"] == "testdb"
 
-    @patch("mcp_mysql.adapters.mysql.MySQLConnection")
+    @patch("mcp_mysql_connector.adapters.mysql.MySQLConnection")
     def test_get_connection_creates_new(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = False
@@ -97,7 +97,7 @@ class TestConnectionPool:
         assert conn == mock_conn
         mock_conn.connect.assert_called_once()
 
-    @patch("mcp_mysql.adapters.mysql.MySQLConnection")
+    @patch("mcp_mysql_connector.adapters.mysql.MySQLConnection")
     def test_get_connection_reuses_connected(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = True
@@ -109,7 +109,7 @@ class TestConnectionPool:
         assert conn == mock_conn
         assert len(pool._pool) == 0
 
-    @patch("mcp_mysql.adapters.mysql.MySQLConnection")
+    @patch("mcp_mysql_connector.adapters.mysql.MySQLConnection")
     def test_get_connection_reuses_disconnected(self, mock_conn_class):
         mock_conn = MagicMock()
         mock_conn.is_connected = False
