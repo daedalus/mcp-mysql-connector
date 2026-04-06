@@ -31,7 +31,7 @@ class TestConnect:
         mock_cm.connect.return_value = {"status": "connected"}
         mock_get_cm.return_value = mock_cm
 
-        result = mysql_tools.connect(host="localhost", use_pool=True, pool_size=10)
+        mysql_tools.connect(host="localhost", use_pool=True, pool_size=10)
 
         mock_cm.connect.assert_called_once()
         call_kwargs = mock_cm.connect.call_args[1]
@@ -68,6 +68,22 @@ class TestExecuteQuery:
         assert result["columns"] == ["id", "name"]
         assert result["rows"] == [[1, "Alice"]]
         mock_cm.execute.assert_called_once_with("SELECT * FROM users", None)
+
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_execute_query_with_params(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.execute.return_value = {
+            "columns": ["id"],
+            "rows": [[1]],
+            "affected_rows": 0,
+        }
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.execute_query("SELECT * FROM users WHERE id = %s", (1,))
+
+        mock_cm.execute.assert_called_once_with(
+            "SELECT * FROM users WHERE id = %s", (1,)
+        )
 
 
 class TestListDatabases:
@@ -163,6 +179,209 @@ class TestDropDatabase:
         mock_cm.drop_database.assert_called_once_with("olddb", True)
 
 
+class TestCreateTable:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_create_table(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.execute.return_value = {"affected_rows": 0}
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.create_table(
+            "users", "id INT PRIMARY KEY, name VARCHAR(255)"
+        )
+
+        assert result["status"] == "created"
+        assert result["table"] == "users"
+        mock_cm.execute.assert_called_once()
+
+
+class TestDropTable:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_drop_table_with_exists(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.execute.return_value = {"affected_rows": 0}
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.drop_table("old_table", if_exists=True)
+
+        assert result["status"] == "dropped"
+        mock_cm.execute.assert_called_once()
+
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_drop_table_without_exists(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.execute.return_value = {"affected_rows": 0}
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.drop_table("old_table", if_exists=False)
+
+        assert result["status"] == "dropped"
+
+
+class TestShowColumns:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_show_columns(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.show_columns.return_value = [{"field": "id", "type": "int"}]
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.show_columns("users", "testdb")
+
+        assert len(result) == 1
+        mock_cm.show_columns.assert_called_once_with("users", "testdb")
+
+
+class TestShowIndexes:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_show_indexes(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.show_indexes.return_value = [{"key_name": "PRIMARY"}]
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.show_indexes("users", "testdb")
+
+        assert len(result) == 1
+        mock_cm.show_indexes.assert_called_once_with("users", "testdb")
+
+
+class TestCreateIndex:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_create_index(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.execute.return_value = {"affected_rows": 0}
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.create_index(
+            "idx_name", "users", "name", "BTREE", "testdb"
+        )
+
+        assert result["status"] == "created"
+        assert result["index"] == "idx_name"
+
+
+class TestDropIndex:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_drop_index(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.execute.return_value = {"affected_rows": 0}
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.drop_index("idx_name", "users", "testdb")
+
+        assert result["status"] == "dropped"
+
+
+class TestCreateUser:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_create_user(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.create_user.return_value = {
+            "status": "created",
+            "user": "newuser@localhost",
+        }
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.create_user("newuser", "localhost", "password123")
+
+        assert result["status"] == "created"
+        mock_cm.create_user.assert_called_once_with(
+            "newuser", "localhost", "password123"
+        )
+
+
+class TestDropUser:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_drop_user(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.drop_user.return_value = {
+            "status": "dropped",
+            "user": "olduser@localhost",
+        }
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.drop_user("olduser", "localhost")
+
+        assert result["status"] == "dropped"
+
+
+class TestGrantPrivileges:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_grant_privileges(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.grant_privileges.return_value = {
+            "status": "granted",
+            "privileges": "SELECT",
+            "on": "testdb.*",
+            "to": "user@localhost",
+        }
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.grant_privileges("SELECT", "testdb.*", "user", "localhost")
+
+        assert result["status"] == "granted"
+        mock_cm.grant_privileges.assert_called_once_with(
+            "SELECT", "testdb.*", "user", "localhost"
+        )
+
+
+class TestRevokePrivileges:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_revoke_privileges(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.revoke_privileges.return_value = {
+            "status": "revoked",
+            "privileges": "SELECT",
+            "on": "testdb.*",
+            "from": "user@localhost",
+        }
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.revoke_privileges(
+            "SELECT", "testdb.*", "user", "localhost"
+        )
+
+        assert result["status"] == "revoked"
+        mock_cm.revoke_privileges.assert_called_once_with(
+            "SELECT", "testdb.*", "user", "localhost"
+        )
+
+
+class TestShowPrivileges:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_show_privileges(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.show_grants.return_value = ["GRANT SELECT ON *.* TO 'user'@'localhost'"]
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.show_privileges("user", "localhost")
+
+        assert len(result) == 1
+        mock_cm.show_grants.assert_called_once_with("user", "localhost")
+
+
+class TestServerStatus:
+    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
+    def test_server_status(self, mock_get_cm):
+        mock_cm = MagicMock()
+        mock_cm.server_status.return_value = {
+            "version": "8.0.30",
+            "uptime": 3600,
+            "threads": 2,
+            "questions": 100,
+            "slow_queries": 0,
+            "opens": 50,
+            "flush_tables": 10,
+            "open_tables": 20,
+        }
+        mock_get_cm.return_value = mock_cm
+
+        result = mysql_tools.server_status()
+
+        assert result["version"] == "8.0.30"
+        assert result["uptime"] == 3600
+        mock_cm.server_status.assert_called_once()
+
+
 class TestTableExists:
     @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
     def test_table_exists_true(self, mock_get_cm):
@@ -197,29 +416,6 @@ class TestDatabaseExists:
 
         assert result is True
         mock_cm.database_exists.assert_called_once_with("testdb")
-
-
-class TestServerStatus:
-    @patch("mcp_mysql.tools.mysql_tools.get_connection_manager")
-    def test_server_status(self, mock_get_cm):
-        mock_cm = MagicMock()
-        mock_cm.server_status.return_value = {
-            "version": "8.0.30",
-            "uptime": 3600,
-            "threads": 2,
-            "questions": 100,
-            "slow_queries": 0,
-            "opens": 50,
-            "flush_tables": 10,
-            "open_tables": 20,
-        }
-        mock_get_cm.return_value = mock_cm
-
-        result = mysql_tools.server_status()
-
-        assert result["version"] == "8.0.30"
-        assert result["uptime"] == 3600
-        mock_cm.server_status.assert_called_once()
 
 
 class TestTransaction:

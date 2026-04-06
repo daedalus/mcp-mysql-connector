@@ -59,6 +59,7 @@ class TestConnectionPool:
     def test_init(self):
         pool = ConnectionPool(host="localhost", user="root", pool_size=3)
         assert pool.pool_size == 3
+        assert pool.config["host"] == "localhost"
 
     @patch("mcp_mysql.adapters.mysql.MySQLConnection")
     def test_get_connection(self, mock_conn_class):
@@ -69,6 +70,7 @@ class TestConnectionPool:
         pool = ConnectionPool(pool_size=3)
         conn = pool.get_connection()
         assert conn == mock_conn
+        mock_conn.connect.assert_called_once()
 
     def test_return_connection(self):
         pool = ConnectionPool(pool_size=3)
